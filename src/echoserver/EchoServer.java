@@ -48,9 +48,6 @@ public class EchoServer {
         if (msg.contains("ONLINE")) {
             String clientsOnline = "";
             for (int i = 0; i < clients.size(); i++) {
-                if (i >= 1){
-                    clientsOnline += " ";
-                }
                 clientsOnline += clients.get(i).getClientName();
                 if (i != clients.size()-1) {
                     clientsOnline += ",";
