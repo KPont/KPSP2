@@ -49,8 +49,6 @@ public class EchoServer {
             String clientsOnline = "";
             for (int i = 0; i < clients.size(); i++) {
                 clientsOnline += clients.get(i).getClientName();
-                System.out.println(clients.size());
-                System.out.println(i);
                 if (i != clients.size()-1) {
                     clientsOnline += ",";
                 }
@@ -85,9 +83,7 @@ public class EchoServer {
             String regex = "#";
             String[] prot = msg.split(regex);        
             String clientsOnline = "";
-            System.out.println(prot.length);
             clientNames.remove(prot[1]);
-            System.out.println(prot[1]);
             for (int i = 0; i < clientNames.size(); i++) {
 //                clientsOnline += clients.get(0).getClientName();
                 if (i >= 1) {
