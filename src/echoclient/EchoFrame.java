@@ -112,6 +112,7 @@ public class EchoFrame extends javax.swing.JFrame implements EchoListener{
     private void jButtonSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSendActionPerformed
         // TODO add your handling code here:
         ec.send(jTextFieldSend.getText());
+        
 //        jTextFieldReceived.setText(el.getMessage());
     }//GEN-LAST:event_jButtonSendActionPerformed
 

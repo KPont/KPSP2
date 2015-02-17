@@ -32,6 +32,7 @@ public class EchoClient extends Thread{
 
     public void registerEchoListener(EchoListener listener) {
         listeners.add(listener);
+//        System.out.println("Listener connected");
     }
 
     public void unRegisterEchoListener(EchoListener listener) {
@@ -49,7 +50,7 @@ public class EchoClient extends Thread{
         while (!msg.equals(ProtocolStrings.STOP)) {
             notifyListeners(msg);
             msg = input.nextLine();
-            System.out.println("received: " + msg);
+//            System.out.println("received: " + msg);
         }
         try {
             socket.close();
