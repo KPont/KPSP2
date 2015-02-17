@@ -47,15 +47,13 @@ public class EchoServer {
 //        String clientsOnline = "";
         if (msg.contains("ONLINE")) {
             String clientsOnline = "";
-            clientNames.add(clients.get(clients.size()-1).getClientName());
             for (int i = 0; i < clients.size(); i++) {
-//                clientsOnline += clients.get(0).getClientName();
-                if (i >= 1) {
+                clientsOnline += " "+clients.get(i).getClientName();
+                System.out.println(clients.size());
+                System.out.println(i);
+                if (i != clients.size()-1) {
                     clientsOnline += ",";
                 }
-//                clientNames.add(clients.get(i).getClientName());
-                clientsOnline += clientNames.get(i);
-//                clientsOnline += clients.get(i).getClientName();
             }
             for (int i = 0; i < clients.size(); i++) {
                 System.out.println(msg);
