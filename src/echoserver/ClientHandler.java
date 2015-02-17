@@ -26,6 +26,7 @@ public class ClientHandler extends Thread {
 
     public ClientHandler(Socket socket) {
         try {
+            this.socket = socket;
             scan = new Scanner(socket.getInputStream());
             pw = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException ex) {
@@ -50,27 +51,34 @@ public class ClientHandler extends Thread {
 
         Logger.getLogger(EchoServer.class.getName()).log(Level.INFO, String.format("Received the message: %1$S ", message));
         while (!returnMessage.equals(ProtocolStrings.STOP)) {
-            String[] prot = message.split(regex);
-            switch (prot[0]) {
-                case "CONNECT":
-                    returnMessage = "ONLINE" + regex;
-                    this.name = prot[1];
-                    break;
-                case "SEND":
-                    returnMessage = message + regex + this.name;
-                    break;
-                case "CLOSE":
-                    returnMessage = message + this.name;
-//                    returnMessage = 
-                    EchoServer.removeHandler(this);
-                    break;
-                default:
-                    returnMessage = message;
-                    break;
+            
+            try {
+                String[] prot = message.split(regex);
+                switch (prot[0]) {
+                    case "CONNECT":
+                        returnMessage = "ONLINE" + regex;
+                        this.name = prot[1];
+                        break;
+                    case "SEND":
+                        returnMessage = message + regex + this.name;
+                        break;
+                    case "CLOSE":
+                        returnMessage = message + this.name;
+//                    returnMessage =
+                        socket.close();
+                        EchoServer.removeHandler(this);
+                        break;
+                    default:
+                        returnMessage = message;
+                        break;
+                }
+                EchoServer.send(returnMessage);
+                Logger.getLogger(EchoServer.class.getName()).log(Level.INFO, String.format("Received the message: %1$S ", message.toUpperCase()));
+                message = scan.nextLine(); //IMPORTANT blocking call
+            } catch (IOException ex) {
+                Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
-            EchoServer.send(returnMessage);
-            Logger.getLogger(EchoServer.class.getName()).log(Level.INFO, String.format("Received the message: %1$S ", message.toUpperCase()));
-            message = scan.nextLine(); //IMPORTANT blocking call
+            
         }
         pw.println(ProtocolStrings.STOP);//Echo the stop message back to the client for a nice closedown
         try {
