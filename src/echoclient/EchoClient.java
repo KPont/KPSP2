@@ -12,8 +12,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import shared.ProtocolStrings;
 
-public class EchoClient extends Thread{
-    
+public class EchoClient extends Thread {
+
     Socket socket;
     private int port;
     private InetAddress serverAddress;
@@ -63,11 +63,22 @@ public class EchoClient extends Thread{
 //        System.out.println(msg);
         output.println(msg);
     }
- 
+
     public void stopServer() throws IOException {
         output.println(ProtocolStrings.STOP);
     }
 
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public List<EchoListener> getListeners() {
+        return listeners;
+    }
 //    public String receive() {
 //        String msg = input.nextLine();
 //        if (msg.equals(ProtocolStrings.STOP)) {
