@@ -16,7 +16,7 @@ public class EchoServer {
     private static boolean keepRunning = true;
     private static ServerSocket serverSocket;
     private static final Properties properties = Utils.initProperties("server.properties");
-    private static final List<ClientHandler> clients = new ArrayList();
+    private static final ArrayList<ClientHandler> clients = new ArrayList();
 //    private static String clientsOnline = "";
     private static final ArrayList<String> clientNames = new ArrayList();
 
@@ -49,7 +49,7 @@ public class EchoServer {
             String clientsOnline = "";
             for (int i = 0; i < clients.size(); i++) {
                 clientsOnline += clients.get(i).getClientName();
-                if (i != clients.size()-1) {
+                if (i != clients.size() - 1) {
                     clientsOnline += ",";
                 }
             }
@@ -78,10 +78,9 @@ public class EchoServer {
                     }
                 }
             }
-        } 
-        else if (msg.contains("CLOSE")){
+        } else if (msg.contains("CLOSE")) {
             String regex = "#";
-            String[] prot = msg.split(regex);        
+            String[] prot = msg.split(regex);
             String clientsOnline = "";
             clientNames.remove(prot[1]);
             for (int i = 0; i < clientNames.size(); i++) {
@@ -98,17 +97,31 @@ public class EchoServer {
                 msg = "ONLINE#" + clientsOnline;
                 clients.get(i).send(msg);
             }
-        }
-        
-        else {
+        } else {
             for (int i = 0; i < clients.size(); i++) {
                 System.out.println(msg);
                 clients.get(i).send(msg);
             }
         }
     }
-
-    private void runServer() {
+    public static String getOnlineUsers(){
+        
+        String result = "Brugere online: <br/>";
+        for (int i = 0; i < clients.size(); i++) {
+            result += clients.get(i).getClientName()+"<br/>";
+        }
+        result += "Antal online: "+clients.size();
+        
+        return result;
+    }
+    public static void runServer() {
+        try {
+            String logFile = properties.getProperty("logFile");
+            Utils.setLogFile(logFile, EchoServer.class.getName());
+        } catch (Exception e) {
+        } finally {
+            Utils.closeLogger(EchoServer.class.getName());
+        }
         int port = Integer.parseInt(properties.getProperty("port"));
         String ip = properties.getProperty("serverIp");
 
@@ -133,20 +146,5 @@ public class EchoServer {
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            String logFile = properties.getProperty("logFile");
-            Utils
-                    .setLogFile(logFile, EchoServer.class
-                            .getName());
-            new EchoServer()
-                    .runServer();
-        } catch (Exception e) {
-        } finally {
-            Utils.closeLogger(EchoServer.class
-                    .getName());
-        }
-
-//        new EchoServer().runServer();
-    }
+    
 }
