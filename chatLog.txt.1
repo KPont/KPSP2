@@ -1,14 +1,18 @@
-feb 17, 2015 12:22:47 AM echoserver.EchoServer runServer
+Feb 17, 2015 11:07:49 AM echoserver.EchoServer runServer
 INFO: Server started. Listening on: 9090, bound to: localhost
-feb 17, 2015 12:22:47 AM echoserver.EchoServer runServer
-SEVERE: null
-java.net.BindException: Address already in use: JVM_Bind
-	at java.net.DualStackPlainSocketImpl.bind0(Native Method)
-	at java.net.DualStackPlainSocketImpl.socketBind(DualStackPlainSocketImpl.java:106)
-	at java.net.AbstractPlainSocketImpl.bind(AbstractPlainSocketImpl.java:376)
-	at java.net.PlainSocketImpl.bind(PlainSocketImpl.java:190)
-	at java.net.ServerSocket.bind(ServerSocket.java:376)
-	at java.net.ServerSocket.bind(ServerSocket.java:330)
-	at echoserver.EchoServer.runServer(EchoServer.java:56)
-	at echoserver.EchoServer.main(EchoServer.java:73)
-
+Feb 17, 2015 11:07:53 AM echoserver.EchoServer runServer
+INFO: Connected to a client
+Feb 17, 2015 11:07:58 AM echoserver.ClientHandler run
+INFO: Received the message: CONNECT#MADS 
+Feb 17, 2015 11:07:58 AM echoserver.ClientHandler run
+INFO: Received the message: CONNECT#MADS 
+Feb 17, 2015 11:08:06 AM echoserver.EchoServer runServer
+INFO: Connected to a client
+Feb 17, 2015 11:08:11 AM echoserver.ClientHandler run
+INFO: Received the message: CONNECT#PETER 
+Feb 17, 2015 11:08:11 AM echoserver.ClientHandler run
+INFO: Received the message: CONNECT#PETER 
+Feb 17, 2015 11:08:17 AM echoserver.ClientHandler run
+INFO: Received the message: SEND#MADS#HEJ 
+Feb 17, 2015 11:08:28 AM echoserver.ClientHandler run
+INFO: Received the message: SEND#PETER#HEJ 
