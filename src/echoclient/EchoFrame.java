@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -57,6 +58,7 @@ public class EchoFrame extends javax.swing.JFrame implements EchoListener {
         jLabel1 = new javax.swing.JLabel();
         jTextFieldManual = new javax.swing.JTextField();
         jButtonConnect = new javax.swing.JButton();
+        jButtonDisconnect = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -86,29 +88,40 @@ public class EchoFrame extends javax.swing.JFrame implements EchoListener {
             }
         });
 
+        jButtonDisconnect.setText("Disconnect");
+        jButtonDisconnect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDisconnectActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButtonConnect)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jTextFieldManual)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTextFieldName, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE))))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextFieldSend, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jTextFieldManual)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldName, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)))
                         .addGap(18, 18, 18)
-                        .addComponent(jButtonSend)))
-                .addContainerGap(148, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jTextFieldSend, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButtonSend))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButtonConnect)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonDisconnect)))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -126,7 +139,9 @@ public class EchoFrame extends javax.swing.JFrame implements EchoListener {
                     .addComponent(jTextFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonConnect))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonConnect)
+                    .addComponent(jButtonDisconnect)))
         );
 
         pack();
@@ -134,10 +149,20 @@ public class EchoFrame extends javax.swing.JFrame implements EchoListener {
 
     private void jButtonSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSendActionPerformed
         // TODO add your handling code here:
-        if (jTextFieldManual.getText().isEmpty()) {
-            ec.send("SEND#" + jListClients.getSelectedValue() + "#" + jTextFieldSend.getText());
+        if (jListClients.isSelectionEmpty() && jTextFieldManual.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "You must pick a recipient!");
         } else {
-            ec.send("SEND#" + jTextFieldManual.getText() + "#" + jTextFieldSend.getText());
+            {
+                if (!jTextFieldSend.getText().isEmpty()) {
+                    if (jTextFieldManual.getText().isEmpty()) {
+                        ec.send("SEND#" + jListClients.getSelectedValue() + "#" + jTextFieldSend.getText());
+                    } else {
+                        ec.send("SEND#" + jTextFieldManual.getText() + "#" + jTextFieldSend.getText());
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "You have not entered a message");
+                }
+            }
         }
 //        jTextFieldReceived.setText(el.getMessage());
     }//GEN-LAST:event_jButtonSendActionPerformed
@@ -148,8 +173,17 @@ public class EchoFrame extends javax.swing.JFrame implements EchoListener {
 
     private void jButtonConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConnectActionPerformed
         // TODO add your handling code here:
-        ec.send("CONNECT#" + jTextFieldName.getText());
+        if (jTextFieldName.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Enter a name before connecting!");
+        } else {
+            ec.send("CONNECT#" + jTextFieldName.getText());
+        }
     }//GEN-LAST:event_jButtonConnectActionPerformed
+
+    private void jButtonDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDisconnectActionPerformed
+        // TODO add your handling code here:
+        ec.send("CLOSE#");
+    }//GEN-LAST:event_jButtonDisconnectActionPerformed
 
     /**
      * @param args the command line arguments
@@ -192,6 +226,7 @@ public class EchoFrame extends javax.swing.JFrame implements EchoListener {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonConnect;
+    private javax.swing.JButton jButtonDisconnect;
     private javax.swing.JButton jButtonSend;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList jListClients;

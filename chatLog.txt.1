@@ -1,18 +1,31 @@
-Feb 17, 2015 11:07:49 AM echoserver.EchoServer runServer
+feb 18, 2015 3:14:05 PM echoserver.EchoServer runServer
 INFO: Server started. Listening on: 9090, bound to: localhost
-Feb 17, 2015 11:07:53 AM echoserver.EchoServer runServer
+feb 18, 2015 3:14:05 PM echoserver.EchoServer runServer
 INFO: Connected to a client
-Feb 17, 2015 11:07:58 AM echoserver.ClientHandler run
-INFO: Received the message: CONNECT#MADS 
-Feb 17, 2015 11:07:58 AM echoserver.ClientHandler run
-INFO: Received the message: CONNECT#MADS 
-Feb 17, 2015 11:08:06 AM echoserver.EchoServer runServer
-INFO: Connected to a client
-Feb 17, 2015 11:08:11 AM echoserver.ClientHandler run
-INFO: Received the message: CONNECT#PETER 
-Feb 17, 2015 11:08:11 AM echoserver.ClientHandler run
-INFO: Received the message: CONNECT#PETER 
-Feb 17, 2015 11:08:17 AM echoserver.ClientHandler run
-INFO: Received the message: SEND#MADS#HEJ 
-Feb 17, 2015 11:08:28 AM echoserver.ClientHandler run
-INFO: Received the message: SEND#PETER#HEJ 
+feb 18, 2015 3:14:05 PM echoserver.EchoServer runServer
+SEVERE: null
+java.net.BindException: Address already in use: JVM_Bind
+	at java.net.DualStackPlainSocketImpl.bind0(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketBind(DualStackPlainSocketImpl.java:106)
+	at java.net.AbstractPlainSocketImpl.bind(AbstractPlainSocketImpl.java:376)
+	at java.net.PlainSocketImpl.bind(PlainSocketImpl.java:190)
+	at java.net.ServerSocket.bind(ServerSocket.java:376)
+	at java.net.ServerSocket.bind(ServerSocket.java:330)
+	at echoserver.EchoServer.runServer(EchoServer.java:121)
+	at echoserver.EchoServer.main(EchoServer.java:142)
+	at TestClient$2.run(TestClient.java:126)
+	at java.lang.Thread.run(Thread.java:744)
+
+feb 18, 2015 3:14:05 PM echoserver.ClientHandler run
+INFO: Received the message: HELLO 
+feb 18, 2015 3:14:05 PM echoserver.EchoServer runServer
+SEVERE: null
+java.net.SocketException: Socket is not bound yet
+	at java.net.ServerSocket.accept(ServerSocket.java:496)
+	at echoserver.EchoServer.runServer(EchoServer.java:123)
+	at echoserver.EchoServer.main(EchoServer.java:142)
+	at TestClient$1.run(TestClient.java:32)
+	at java.lang.Thread.run(Thread.java:744)
+
+feb 18, 2015 3:14:05 PM echoserver.ClientHandler run
+INFO: Received the message: HELLO 
