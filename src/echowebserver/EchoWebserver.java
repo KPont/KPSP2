@@ -9,6 +9,7 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import echoserver.EchoServer;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,12 +38,15 @@ public class EchoWebserver {
             }
             HttpServer server = HttpServer.create(new InetSocketAddress(ip, port), 0);
             server.createContext("/", new FileHandler());
+            server.createContext("/chatlog.txt", new FileHandler());
+            server.createContext("/online.html", new OnlinePageHandler());
             
             server.setExecutor(null);
             server.start();
         } catch (IOException ex) {
             Logger.getLogger(EchoWebserver.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }
+        EchoServer.runServer();
     }
     
     static class FileHandler implements HttpHandler {
@@ -51,10 +55,15 @@ public class EchoWebserver {
         public void handle(HttpExchange he) throws IOException{
              String requestURI = he.getRequestURI().toString();
             String fileName = requestURI.substring(requestURI.lastIndexOf("/") + 1);
+            String contentFolder = "public/";
             if(fileName.isEmpty()){
                 fileName = "index.html";
             }
-            String contentFolder = "public/";
+            else if(fileName.equals("chatlog.txt")){
+                contentFolder = "";
+                fileName = "chatLog.txt.1";
+            }
+            
             File file = new File(contentFolder
                     + fileName);
             if (file.exists()) {
@@ -72,6 +81,12 @@ public class EchoWebserver {
                         break;
                     case "css":
                         h.add("Content-Type", "text/css");
+                        break;
+                    case "1":
+                        h.add("Content-Type", "text/plain");
+                        break;
+                    case "txt":
+                        h.add("Content-Type", "text/plain");
                         break;
                     case "pdf":
                         h.add("Content-Type", "application/pdf");
@@ -118,7 +133,7 @@ public class EchoWebserver {
                 sb.append("<meta charset='UTF-8'>");
                 sb.append("</head>");
                 sb.append("<body>");
-                sb.append("<h2></h2>");
+                sb.append(EchoServer.getOnlineUsers());
                 sb.append("</body>");
                 sb.append("</html>");
                 String response = sb.toString();
