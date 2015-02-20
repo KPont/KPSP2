@@ -38,7 +38,7 @@ public class EchoWebserver {
             }
             HttpServer server = HttpServer.create(new InetSocketAddress(ip, port), 0);
             server.createContext("/", new FileHandler());
-            server.createContext("/chatlog.txt", new FileHandler());
+            server.createContext("/chatlog.txt", new LogPageHandler());
             server.createContext("/online.html", new OnlinePageHandler());
             
             server.setExecutor(null);
@@ -151,29 +151,24 @@ public class EchoWebserver {
     static class LogPageHandler implements HttpHandler {
 
         @Override
-        public void handle(HttpExchange he) {
-            try {
-                StringBuilder sb = new StringBuilder();
-                sb.append("<!DOCTYPE html>");
-                sb.append("<html>");
-                sb.append("<head>");
-                sb.append("<title>Echo chat - Home</title>");
-                sb.append("<meta charset='UTF-8'>");
-                sb.append("</head>");
-                sb.append("<body>");
-                sb.append("<h2></h2>");
-                sb.append("</body>");
-                sb.append("</html>");
-                String response = sb.toString();
-                Headers h = he.getResponseHeaders();
-                h.add("Content-Type", "text/html");
-                he.sendResponseHeaders(200, response.length());
-                try (PrintWriter pw = new PrintWriter(he.getResponseBody())) {
-                    pw.print(response);
+        public void handle(HttpExchange he) throws IOException{
+            File file = new File("chatLog.txt.1");
+            
+                byte[] bytesToSend = new byte[(int) file.length()];
+                try {
+                    FileInputStream fis = new FileInputStream(file);
+                    fis.read(bytesToSend, 0, bytesToSend.length);
+                } catch (IOException ie) {
+                    ie.printStackTrace();
                 }
-            }   catch (IOException ex) {
-                Logger.getLogger(EchoWebserver.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                Headers h = he.getResponseHeaders();
+                
+                h.add("Content-Type", "text/plain");
+                he.sendResponseHeaders(200, bytesToSend.length);
+                try (OutputStream os = he.getResponseBody()) {
+                    os.write(bytesToSend, 0, bytesToSend.length);
+                }
+            
         }
     }
     
