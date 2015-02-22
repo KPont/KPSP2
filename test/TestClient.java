@@ -66,18 +66,23 @@ public class TestClient implements EchoListener {
         client.connect("localhost", 9090);
         client.send("CONNECT#Per");
         client.sleep(1000);
+        
         assertEquals("ONLINE", sp[0]);
         assertEquals("Per", sp2[0]);
+        
         EchoClient client2 = new EchoClient();
         client2.registerEchoListener(this);
         client2.connect("localhost", 9090);
         client2.send("CONNECT#Lasse");
         client2.sleep(1000);
+        
         assertEquals("ONLINE", sp[0]);
         assertEquals("Per", sp2[0]);
         assertEquals("Lasse", sp2[1]);
+        
         client2.send("CLOSE#LASSE");
         client2.sleep(1000);
+        
         assertEquals("ONLINE", sp[0]);
         assertEquals("Per", sp2[0]);
         assertNotSame("Lasse", sp2[1]);
@@ -91,11 +96,24 @@ public class TestClient implements EchoListener {
         client.send("CONNECT#Per");
         client.send("SEND#*#Hello");
         client.sleep(1000);
+        
         assertEquals("MESSAGE", sp[0]);
         assertEquals("Per", sp[1]);
         assertEquals("Hello", sp[2]);
-
+        
+        EchoClient client2 = new EchoClient();
+        client2.registerEchoListener(this);
+        client2.connect("localhost", 9090);
+        client2.send("CONNECT#Lasse");
+        client2.send("SEND#Per#Hello Per");
+        client2.sleep(1000);
+        
+        assertEquals("MESSAGE", sp[0]);
+        assertEquals("Lasse", sp[1]);
+        assertEquals("Hello Per", sp[2]);
+        
         client.send("CLOSE#");
+        client2.send("CLOSE#");
     }
 //
 
@@ -103,14 +121,18 @@ public class TestClient implements EchoListener {
     public void regUnRegEchoListener() throws InterruptedException {
 
         client = new EchoClient();
+        
         assertTrue(client.getListeners().isEmpty());
-        client.join();
+        
         client.registerEchoListener(this);
         assertTrue(client.getListeners().size() == 1);
+        
         client.registerEchoListener(this);
         assertTrue(client.getListeners().size() == 2);
+        
         client.unRegisterEchoListener(this);
         assertTrue(client.getListeners().size() == 1);
+        
         client.unRegisterEchoListener(this);
         assertTrue(client.getListeners().isEmpty());
     }
