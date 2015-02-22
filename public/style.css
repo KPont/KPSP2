@@ -58,3 +58,21 @@ main a{
     margin: 10px;
     padding: 10px 20px;
 }
+nav ul li:hover {
+    background: none repeat scroll 0 0 #000;
+}
+nav ul li:hover a{
+    color:#fff;
+}
+nav ul li.active {
+    background: none repeat scroll 0 0 #000;
+}
+nav ul li.active a{
+    color:#fff;
+}
+main a:hover {
+    background: none repeat scroll 0 0 #fff;
+    border: 1px solid #000;
+    color: #000;
+    margin: 9px;
+}
