@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,18 +30,19 @@ import java.util.logging.Logger;
 public class EchoWebserver {
 
     // Defaults
-    static int port = 8080;
+    static int port = 80;
     static String ip = "localhost";
     
     public static void main(String[] args) {
         try {
+            
             if (args.length == 2) {
                 port = Integer.parseInt(args[0]);
                 ip = args[1];
             }
             HttpServer server = HttpServer.create(new InetSocketAddress(ip, port), 0);
             server.createContext("/", new FileHandler());
-            server.createContext("/chatlog.txt", new LogPageHandler());
+            server.createContext("/chatlog.html", new LogPageHandler());
             server.createContext("/online.html", new OnlinePageHandler());
             
             server.setExecutor(null);
@@ -58,10 +62,6 @@ public class EchoWebserver {
             String contentFolder = "public/";
             if(fileName.isEmpty()){
                 fileName = "index.html";
-            }
-            else if(fileName.equals("chatlog.txt")){
-                contentFolder = "";
-                fileName = "chatLog.txt.1";
             }
             
             File file = new File(contentFolder
@@ -123,17 +123,37 @@ public class EchoWebserver {
     static class OnlinePageHandler implements HttpHandler {
 
         @Override
-        public void handle(HttpExchange he) {
-            try {
+        public void handle(HttpExchange he) throws IOException {
+
                 StringBuilder sb = new StringBuilder();
-                sb.append("<!DOCTYPE html>");
                 sb.append("<html>");
-                sb.append("<head>");
-                sb.append("<title>Echo chat - Home</title>");
-                sb.append("<meta charset='UTF-8'>");
-                sb.append("</head>");
-                sb.append("<body>");
-                sb.append(EchoServer.getOnlineUsers());
+                    sb.append("<head>");
+                        sb.append("<title>Echo chat - Home</title>");
+                        sb.append("<meta charset='UTF-8'>");
+                        sb.append("<meta name='viewport' content='width=device-width, initial-scale=1.0'>");
+                        sb.append("<link rel='stylesheet' type='text/css' href='/style.css'>");
+                    sb.append("</head>");
+                    sb.append("<body>");
+                        sb.append("<header>");
+                        sb.append("<h1>Echo Chat</h1>");
+                            sb.append("<nav>");
+                                sb.append("<ul>");
+                                    sb.append("<li><a href='/'>Hjem</a></li>");
+                                    sb.append("<li><a href='/online.html'>Online brugere</a></li>");
+                                    sb.append("<li><a href='/chatlog.html'>Chat log</a></li>");
+                                sb.append("</ul>");
+                            sb.append("</nav>");
+                        sb.append("</header>");
+                        sb.append("<main>");
+                            sb.append(EchoServer.getOnlineUsers());
+                        sb.append("</main>");
+                        sb.append("<footer>");
+                            sb.append("<span>"
+                                    + "Hjemmeside og Chat system lavet af Alexander D. Lund, Kasper H. Pontoppidan og Mads C. Hansen"
+                            + "</span>");
+                        sb.append("</footer>");
+                    sb.append("</body>");
+                sb.append("</html>");
                 sb.append("</body>");
                 sb.append("</html>");
                 String response = sb.toString();
@@ -143,32 +163,48 @@ public class EchoWebserver {
                 try (PrintWriter pw = new PrintWriter(he.getResponseBody())) {
                     pw.print(response);
                 }
-            }   catch (IOException ex) {
-                Logger.getLogger(EchoWebserver.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
     static class LogPageHandler implements HttpHandler {
 
         @Override
         public void handle(HttpExchange he) throws IOException{
-            File file = new File("chatLog.txt.1");
-            
-                byte[] bytesToSend = new byte[(int) file.length()];
-                try {
-                    FileInputStream fis = new FileInputStream(file);
-                    fis.read(bytesToSend, 0, bytesToSend.length);
-                } catch (IOException ie) {
-                    ie.printStackTrace();
-                }
-                Headers h = he.getResponseHeaders();
-                
-                h.add("Content-Type", "text/plain");
-                he.sendResponseHeaders(200, bytesToSend.length);
-                try (OutputStream os = he.getResponseBody()) {
-                    os.write(bytesToSend, 0, bytesToSend.length);
-                }
-            
+            StringBuilder sb = new StringBuilder();
+            sb.append("<html>");
+                sb.append("<head>");
+                    sb.append("<title>Echo chat - Home</title>");
+                    sb.append("<meta charset='UTF-8'>");
+                    sb.append("<meta name='viewport' content='width=device-width, initial-scale=1.0'>");
+                    sb.append("<link rel='stylesheet' type='text/css' href='/style.css'>");
+                sb.append("</head>");
+                sb.append("<body>");
+                    sb.append("<header>");
+                    sb.append("<h1>Echo Chat</h1>");
+                        sb.append("<nav>");
+                            sb.append("<ul>");
+                                sb.append("<li><a href='/'>Hjem</a></li>");
+                                sb.append("<li><a href='/online.html'>Online brugere</a></li>");
+                                sb.append("<li><a href='/chatlog.html'>Chat log</a></li>");
+                            sb.append("</ul>");
+                        sb.append("</nav>");
+                    sb.append("</header>");
+                    sb.append("<main>");
+                    byte[] encoded = Files.readAllBytes(Paths.get("chatlog.txt"));
+                    sb.append(new String(encoded, "UTF-8"));
+                    sb.append("<footer>");
+                        sb.append("<span>"
+                                + "Hjemmeside og Chat system lavet af Alexander D. Lund, Kasper H. Pontoppidan og Mads C. Hansen"
+                        + "</span>");
+                    sb.append("</footer>");
+                sb.append("</body>");
+            sb.append("</html>");
+            String response = sb.toString();
+            Headers h = he.getResponseHeaders();
+            h.add("Content-Type", "text/html");
+            he.sendResponseHeaders(200, response.length());
+            try (PrintWriter pw = new PrintWriter(he.getResponseBody())) {
+                pw.print(response);
+            }
         }
     }
     
