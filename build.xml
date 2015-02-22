@@ -14,6 +14,7 @@
       <copy file="server.properties" todir="${dist.dir}"/> 
       <copy file="startServer.bat" todir="${dist.dir}"/>
       <copy file="startClient.bat" todir="${dist.dir}"/> 
+      <copydir src="public" dest="${dist.dir}/public"/>
     </target>
 
     <!--
