@@ -18,8 +18,8 @@ public class TestClient implements EchoListener {
 
     private String regex = "#";
     private String regex2 = ",";
-    private static String[] sp;
-    private static String[] sp2;
+    private String[] sp;
+    private String[] sp2;
     private String msg;
     private EchoClient client;
 
