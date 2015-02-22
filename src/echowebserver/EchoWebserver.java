@@ -139,7 +139,7 @@ public class EchoWebserver {
                             sb.append("<nav>");
                                 sb.append("<ul>");
                                     sb.append("<li><a href='/'>Hjem</a></li>");
-                                    sb.append("<li><a href='/online.html'>Online brugere</a></li>");
+                                    sb.append("<li class'active'><a href='/online.html'>Online brugere</a></li>");
                                     sb.append("<li><a href='/chatlog.html'>Chat log</a></li>");
                                 sb.append("</ul>");
                             sb.append("</nav>");
@@ -184,7 +184,7 @@ public class EchoWebserver {
                             sb.append("<ul>");
                                 sb.append("<li><a href='/'>Hjem</a></li>");
                                 sb.append("<li><a href='/online.html'>Online brugere</a></li>");
-                                sb.append("<li><a href='/chatlog.html'>Chat log</a></li>");
+                                sb.append("<li class='active'><a href='/chatlog.html'>Chat log</a></li>");
                             sb.append("</ul>");
                         sb.append("</nav>");
                     sb.append("</header>");
