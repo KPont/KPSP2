@@ -80,12 +80,33 @@ public class TestClient implements EchoListener {
         assertEquals("Per", sp2[0]);
         assertEquals("Lasse", sp2[1]);
         
-        client2.send("CLOSE#LASSE");
+        EchoClient client3 = new EchoClient();
+        client3.registerEchoListener(this);
+        client3.connect("localhost", 9090);
+        client3.send("CONNECT#Rasmus");
+        client3.sleep(1000);
+        
+        assertEquals("ONLINE", sp[0]);
+        assertEquals("Per", sp2[0]);
+        assertEquals("Lasse", sp2[1]);
+        assertEquals("Rasmus", sp2[2]);
+        
+        client3.send("CLOSE#");
+        client3.sleep(1000);
+        
+        assertEquals("ONLINE", sp[0]);
+        assertEquals("Per", sp2[0]);
+        assertEquals("Lasse", sp2[1]);
+        assertNotSame("Rasmus", sp2[2]);
+        
+        client2.send("CLOSE#");
         client2.sleep(1000);
         
         assertEquals("ONLINE", sp[0]);
         assertEquals("Per", sp2[0]);
         assertNotSame("Lasse", sp2[1]);
+        
+        client.send("CLOSE#");
     }
 
     @Test
