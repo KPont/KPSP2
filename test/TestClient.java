@@ -64,6 +64,9 @@ public class TestClient implements EchoListener {
         client = new EchoClient();
         client.registerEchoListener(this);
         client.connect("localhost", 9090);
+        
+        assertTrue(client.getSocket().isConnected());
+        
         client.send("CONNECT#Per");
         client.sleep(1000);
         
@@ -73,6 +76,9 @@ public class TestClient implements EchoListener {
         EchoClient client2 = new EchoClient();
         client2.registerEchoListener(this);
         client2.connect("localhost", 9090);
+        
+        assertTrue(client2.getSocket().isConnected());
+        
         client2.send("CONNECT#Lasse");
         client2.sleep(1000);
         
@@ -83,6 +89,7 @@ public class TestClient implements EchoListener {
         EchoClient client3 = new EchoClient();
         client3.registerEchoListener(this);
         client3.connect("localhost", 9090);
+        assertTrue(client3.getSocket().isConnected());
         client3.send("CONNECT#Rasmus");
         client3.sleep(1000);
         
@@ -91,7 +98,7 @@ public class TestClient implements EchoListener {
         assertEquals("Lasse", sp2[1]);
         assertEquals("Rasmus", sp2[2]);
         
-        client3.send("CLOSE#");
+        client3.send("CLOSE#Rasmus");
         client3.sleep(1000);
         
         assertEquals("ONLINE", sp[0]);
