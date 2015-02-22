@@ -1,5 +1,6 @@
 package echoclient;
 
+import echoserver.EchoServer;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -65,7 +66,7 @@ public class EchoClient extends Thread {
     }
 
     public void stopServer() throws IOException {
-        output.println(ProtocolStrings.STOP);
+        output.println(ProtocolStrings.STOP);   
     }
 
     public Socket getSocket() {
